@@ -1,60 +1,60 @@
-# Edge Detection and Motion Imaging using Contouring Techniques
+# Motion Detection and Motion Imaging with Optical Flow
 
-## Overview
+A webcam script with two modes, both based on Farneback dense optical flow in OpenCV:
 
-This project implements a real-time edge detection and motion imaging system using contouring techniques. The system captures video from a webcam, processes the frames to detect edges of motion, and displays the results interactively. The project leverages OpenCV for computer vision tasks and provides an interactive interface for threshold adjustment in edge detection.
+1. **Motion edge detection:** outlines moving regions with green contours and shows "Motion Detected" when anything moves
+2. **Motion imaging:** colours each pixel by the direction (hue) and speed (brightness) of its motion
 
-## Features
+All code is in [`edge_motion_detection.py`](edge_motion_detection.py).
 
-- Real-time edge detection with adjustable threshold
-- Real-time motion imaging using optical flow
-- Visually Appealing edge detection of the movinf pixels in the frame
-  
-## Usage
+---
 
-1. Run the script
+## How It Works
 
-2. The script will start the webcam and begin processing frames for the moving objects in the frames and highlighting the edges using green contours. Press `q` to quit the application.
+**Mode 1: Motion edge detection**
+* Computes optical flow between consecutive grayscale frames
+* Pixels whose flow magnitude is above a threshold are marked as moving
+* Outer contours of the moving regions are drawn in green on the live frame
+* A **Sensitivity** trackbar (0 to 50, default 2) sets the threshold: lower values pick up smaller movements
 
-## Project Structure
+**Mode 2: Motion imaging**
+* Computes the same optical flow
+* Converts each flow vector to angle and magnitude, then to an HSV image: hue = direction, saturation = full, value = normalised speed
+* Shows the original frame and the colour-coded motion side by side
 
-- `edge_motion_detection.py`: Main script for edge detection and motion imaging.
+---
 
-## Code Description
+## How to Run
 
-1. **Edge Detection:**
-    - Converts frames to grayscale.
-    - Applies Laplacian, SobelX, and SobelY operations.
-    - Uses Canny edge detection with an adjustable threshold via a trackbar.
-    - Displays the original and processed frames.
+```bash
+pip install -r requirements.txt
+python edge_motion_detection.py
+```
 
-2. **Motion Imaging:**
-    - Converts frames to grayscale.
-    - Computes optical flow between consecutive frames using Farneback method.
-    - Visualizes motion using HSV color space.
-    - Displays the original and motion-imaging frames.
+Type `1` (motion edge detection) or `2` (motion imaging) when asked, then press `q` in the video window to quit.
 
-## Example
+---
 
-1. Run the script:
-   ```sh
-   python edge_motion_detection.py
-   ```
+## Fix in This Version
 
-2. Select the task:
-   - Enter `1` for Edge Detection. Adjust the threshold using the trackbar that appears.
-   - Enter `2` for Motion Imaging. Observe the motion visualization in real-time.
+The motion imaging hue was divided by 4 instead of 2, so directions only used half of the colour wheel. It now spans the full OpenCV hue range (0 to 179).
 
-## Dependencies
+The previous README described Laplacian, Sobel and Canny edge detection; these are not used in the code, so that description was removed.
 
-- OpenCV: For computer vision tasks.
-- NumPy: For numerical operations.
+---
 
-## Contributing
+## Limitations
 
-Contributions are welcome! If you have any ideas, suggestions, or issues, please open an issue or submit a pull request.
+* Optical flow is computed on every full frame, which can be slow on large webcam images
+* Camera shake is detected as motion
+* No recording or saving of results
 
-## Acknowledgements
+---
 
-- OpenCV library for facilitating computer vision tasks.
-- The open-source community for continuous improvements and support.
+## Tools
+
+Python, OpenCV, NumPy
+
+## License
+
+Apache License 2.0 (see [LICENSE](LICENSE)).
