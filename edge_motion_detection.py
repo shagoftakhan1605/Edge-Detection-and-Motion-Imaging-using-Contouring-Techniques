@@ -68,7 +68,7 @@ def motion_img(frame, prev_gray):
 
     mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
     
-    mask[..., 0] = ang * 180 / np.pi / 4
+    mask[..., 0] = ang * 180 / np.pi / 2  # OpenCV hue range is 0-179, so 0-360 degrees maps to 0-180
     mask[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
     
     rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
